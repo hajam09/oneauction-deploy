@@ -44,11 +44,7 @@ INSTALLED_APPS = [
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "qmwebprog201django>=1.11,<1.12
-django-debug-toolbar==1.8
-gunicorn==19.4.5
-psycopg2==2.7.3.1
-whitenoise==3.3.19@gmail.com"
+EMAIL_HOST_USER = "qmwebprog2019@gmail.com"
 EMAIL_HOST_PASSWORD = "OneAuction"
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Epicups Team <admin@epicups.com>'
