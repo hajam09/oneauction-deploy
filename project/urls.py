@@ -8,5 +8,6 @@ def health(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('mainapp.urls')),
     path('health/', health, name="health"),
 ]
