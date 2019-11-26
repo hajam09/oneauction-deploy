@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class CustomerProfile(models.Model):
-	userid = models.OneToOneField(User, on_delete=models.CASCADE)#Onetoone
+	userid = models.ForeignKey(User, on_delete=models.CASCADE)#Onetoone
 	birthDate = models.DateField()
 	email = models.CharField(max_length=1000, default="")
 
