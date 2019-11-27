@@ -96,6 +96,8 @@
                 success: function(data) {
                     if (data == "Your bidding value is too small!") {
                         alert("Your bidding value is too small!");
+                    } else if (data == "You cannot bid on this item!") {
+                        alert("You cannot bid on this item!");
                     } else {
                         document.getElementById("currentprice").innerHTML = "£ " + data.items.newprice.toFixed(2);
                         document.getElementById("userbidvalue").value = "";

@@ -15,7 +15,7 @@
         <div class="form-group">
             <label for="email" class="col-sm-3 control-label">Email</label>
             <div class="col-sm-9">
-                <input type="email" id="email" name="email" placeholder="Email" class="form-control" required/>
+                <input type="email" id="email" name="email" placeholder="Email" class="form-control" disabled/>
             </div>
         </div>
         <div class="form-group">
@@ -51,7 +51,7 @@
         var password = document.getElementById("password").value;
         var password2 = document.getElementById("password2").value;
 
-        if (fullname != null && fullname != "", email != null && email != "", password == password2) {
+        if (fullname != null && fullname != "" && email != null && email != "" && password == password2) {
             //new password legnth not validated so user can entery less than 8 characters.
             $.ajax({
                 type: "PUT",
@@ -64,12 +64,21 @@
                 success: function(info) {
                     if (info == "Your details are updated!") {
                         alert(info);
-                        var url = "{% url 'mainapp:index' %}";
+                        var url = "{% url 'mainapp:login' %}";
+                        document.location.href = url;
                     }
                 }
             })
         } else {
-            alert("Please Fill All Required Field");
+            console.log(fullname);
+            var conditions = "";
+            if (fullname=="") {
+                conditions = conditions + "Your Full Name field is empty!\n";
+            }
+            if (password!="" && password!=password2) {
+                conditions = conditions + "Your passwords are not the same!";
+            }
+            alert(conditions);
             return false;
         }
     }

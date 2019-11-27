@@ -159,6 +159,11 @@ def itempage(request):
 		itempkvalue = put.get('pkvalue')
 		itemobject = Item.objects.get(pk=int(itempkvalue))
 
+		# Need to prevent seller from entering the bid.
+		user_pk = request.user
+		if(user_pk.pk==itemobject.seller.id):
+			return HttpResponse("You cannot bid on this item!")
+
 		if(userbidvalue>itemobject.price):
 			user_pk = request.user
 			#New bidder
