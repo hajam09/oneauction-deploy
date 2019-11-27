@@ -58,9 +58,10 @@
                 data: {
                     fullname: fullname,
                     email: email,
+                    password: password,
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                 },
-                success: function() {
+                success: function(info) {
                     if (info == "Your details are updated!") {
                         alert(info);
                         var url = "{% url 'mainapp:index' %}";

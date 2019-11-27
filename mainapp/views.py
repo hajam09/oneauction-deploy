@@ -142,7 +142,6 @@ def update_profile(request):
 
 		User.objects.filter(pk=int(user_pk)).update(username=email, first_name=fname, last_name=sname)
 		u = User.objects.get(pk=int(user_pk))
-
 		if(put.get('password')):
 			#User changed the password
 			u.set_password(put.get('password'))
