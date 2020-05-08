@@ -1,0 +1,419 @@
+{% extends "mainapp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+	<!-- Nav tabs nav-tabs -->
+	<ul class="nav nav-pills">
+		<li class="active"><a data-toggle="tab" href="#rated">Rated/Reviewed Books</a></li>
+		<li><a data-toggle="tab" href="#recentlyviewed">Recently Viewed</a></li>
+		<li><a data-toggle="tab" href="#favourites">Favourites</a></li>
+		<li><a data-toggle="tab" href="#readingnow">Reading Now</a></li>
+		<li><a data-toggle="tab" href="#toread">To Read</a></li>
+		<li><a data-toggle="tab" href="#haveread">Have Read</a></li>
+		<li><a data-toggle="tab" href="#booksforme">Books for Me</a></li>
+	</ul>
+	<br>
+	<input id="tablequery" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="Search for something in the table.">
+
+	<!-- Tab panes -->
+	<div class="tab-content" style="height: 500px; overflow: auto;">
+		<div id="rated" class="tab-pane fade in active">
+			<h3>Rated and Reviewed Books</h3>
+			<table class="table" id="rated-table" style="table-layout:fixed;">
+				<thead>
+					<tr>
+						<th scope="col">Book Title / Page</th>
+						<th scope="col">Categories</th>
+						<th scope="col">Your Rating</th>
+						<th scope="col">Your Comment</th>
+					</tr>
+				</thead>
+				<tbody id="rated-result">
+				</tbody>
+			</table>
+		</div>
+		<div id="recentlyviewed" class="tab-pane fade">
+			<h3>Recently Viewed Books</h3>
+			<table class="table" id="visited-table" style="table-layout:fixed;">
+				<thead>
+					<tr>
+						<th scope="col">Book Title / Page</th>
+						<th scope="col">Categories</th>
+						<th scope="col">Average Rating</th>
+					</tr>
+				</thead>
+				<tbody id="visited-result">
+				</tbody>
+			</table>
+		</div>
+		<div id="favourites" class="tab-pane fade">
+			<h3>Favourite Books</h3>
+			<table class="table" id="favourites-table" style="table-layout:fixed;">
+				<thead>
+					<tr>
+						<th scope="col">Book Title / Page</th>
+						<th scope="col">Categories</th>
+						<th scope="col">Average Rating</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody id="favourite-result">
+				</tbody>
+			</table>
+		</div>
+		<div id="readingnow" class="tab-pane fade">
+			<h3>Reading Now Books</h3>
+			<table class="table" id="reading-now-table" style="table-layout:fixed;">
+				<thead>
+					<tr>
+						<th scope="col">Book Title / Page</th>
+						<th scope="col">Categories</th>
+						<th scope="col">Average Rating</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody id="reading-now-result">
+				</tbody>
+			</table>
+		</div>
+		<div id="toread" class="tab-pane fade">
+			<h3>To Read Books</h3>
+			<table class="table" id="toread-table" style="table-layout:fixed;">
+				<thead>
+					<tr>
+						<th scope="col">Book Title / Page</th>
+						<th scope="col">Categories</th>
+						<th scope="col">Average Rating</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody id="toread-result">
+				</tbody>
+			</table>
+		</div>
+		<div id="haveread" class="tab-pane fade">
+			<h3>Have Read</h3>
+			<table class="table" id="have-read-table" style="table-layout:fixed;">
+				<thead>
+					<tr>
+						<th scope="col">Book Title / Page</th>
+						<th scope="col">Categories</th>
+						<th scope="col">Average Rating</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody id="have-read-result">
+				</tbody>
+			</table>
+		</div>
+		<div id="booksforme" class="tab-pane fade">
+			<h3>Recommendation here</h3>
+			<table class="table" id="recommendation-table" style="table-layout:fixed;">
+				<thead>
+					<tr>
+						<th scope="col">Book Title / Page</th>
+						<th scope="col">Categories</th>
+						<th scope="col">Average Rating</th>
+					</tr>
+				</thead>
+				<tbody id="recommendation-result">
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#tablequery").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#rated-result tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		});
+		$("#tablequery").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#visited-result tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		});
+		$("#tablequery").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#favourite-result tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		});
+		$("#tablequery").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#reading-now-result tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		});
+		$("#tablequery").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#toread-result tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		});
+		$("#tablequery").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#have-read-result tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		});
+		$("#tablequery").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#recommendation-result tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		});
+	});
+	window.onload = function() {
+		var favourite_Book = "{{favourite_Book}}";
+		var reading_Book = "{{reading_Book}}";
+		var to_read_Book = "{{to_read_Book}}";
+		var have_read_Book = "{{have_read_Book}}";
+
+		"{% for books in favourite_Book %}"
+			var uid = "{{books.isbn_13}}"///{{books.isbn_10}}"
+			var isbn_13 = "{{books.isbn_13}}";
+			// var isbn_10 = "{{books.isbn_10}}";
+
+			// var book_name = "<a style='cursor: pointer;' onclick='bookPage("+isbn_13+")'>" + "{{books.title}}" + "</a>";
+			var book_name = "<a style='cursor: pointer;' href='/book_page/{{books.isbn_13}}' > {{books.title}} </a>";//Enables right click on the link
+			var categories = "{{books.categories}}";
+			var average_rating = "{{books.average_rating}}";
+			var action = "<button type='button' class='btn btn-danger' onclick='removefromfavourites("+isbn_13+")'>Remove From Favourites</button>";
+
+			$("#favourites-table").find('tbody').append("<tr id="+uid+"><td scope='row' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + book_name + "</td><td>" + categories + "</td><td>" + average_rating + "</td><td>" + action + "</td></tr>");
+		"{% endfor %}"
+
+		"{% for books in reading_Book %}"
+			var uid = "{{books.isbn_13}}"///{{books.isbn_10}}"
+			var isbn_13 = "{{books.isbn_13}}";
+			// var isbn_10 = "{{books.isbn_10}}";
+
+			// var book_name = "<a style='cursor: pointer;' onclick='bookPage("+isbn_13+")'>" + "{{books.title}}" + "</a>";
+			var book_name = "<a style='cursor: pointer;' href='/book_page/{{books.isbn_13}}' > {{books.title}} </a>";//Enables right click on the link
+			var categories = "{{books.categories}}";
+			var average_rating = "{{books.average_rating}}";
+			var action = "<button type='button' class='btn btn-danger' onclick='removefromreadingnow("+isbn_13+")'>Remove From Reading</button>";
+
+			$("#reading-now-table").find('tbody').append("<tr id="+uid+"><td scope='row' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + book_name + "</td><td>" + categories + "</td><td>" + average_rating + "</td><td>" + action + "</td></tr>");
+		"{% endfor %}"
+
+		"{% for books in to_read_Book %}"
+			var uid = "{{books.isbn_13}}"///{{books.isbn_10}}"
+			var isbn_13 = "{{books.isbn_13}}";
+			// var isbn_10 = "{{books.isbn_10}}";
+
+			// var book_name = "<a style='cursor: pointer;' onclick='bookPage("+isbn_13+")'>" + "{{books.title}}" + "</a>";
+			var book_name = "<a style='cursor: pointer;' href='/book_page/{{books.isbn_13}}' > {{books.title}} </a>";//Enables right click on the link
+			var categories = "{{books.categories}}";
+			var average_rating = "{{books.average_rating}}";
+			var action = "<button type='button' class='btn btn-danger' onclick='removefromtoread("+isbn_13+")'>Remove From To Read</button>";
+
+			$("#toread-table").find('tbody').append("<tr id="+uid+"><td scope='row' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + book_name + "</td><td>" + categories + "</td><td>" + average_rating + "</td><td>" + action + "</td></tr>");
+		"{% endfor %}"
+
+		"{% for books in have_read_Book %}"
+			var uid = "{{books.isbn_13}}"///{{books.isbn_10}}"
+			var isbn_13 = "{{books.isbn_13}}";
+			// var isbn_10 = "{{books.isbn_10}}";
+
+			// var book_name = "<a style='cursor: pointer;' onclick='bookPage("+isbn_13+")'>" + "{{books.title}}" + "</a>";
+			var book_name = "<a style='cursor: pointer;' href='/book_page/{{books.isbn_13}}' > {{books.title}} </a>";//Enables right click on the link
+			var categories = "{{books.categories}}";
+			var average_rating = "{{books.average_rating}}";
+			var action = "<button type='button' class='btn btn-danger' onclick='removefromhaveread("+isbn_13+")'>Remove From To Have Read</button>";
+
+			$("#have-read-table").find('tbody').append("<tr id="+uid+"><td scope='row' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + book_name + "</td><td>" + categories + "</td><td>" + average_rating + "</td><td>" + action + "</td></tr>");
+		"{% endfor %}"
+
+		"{% for reviews in reviewed_Book %}"
+			var uid = "{{reviews.isbn_13}}"///{{reviews.isbn_10}}"
+			var isbn_13 = "{{reviews.isbn_13}}";
+			// var isbn_10 = "{{reviews.isbn_10}}";
+
+			// var book_name = "<a style='cursor: pointer;' onclick='bookPage("+isbn_13+")'>" + "{{reviews.title}}" + "</a>";
+			var book_name = "<a style='cursor: pointer;' href='/book_page/{{reviews.isbn_13}}' > {{reviews.title}} </a>";//Enables right click on the link
+			var categories = "{{reviews.categories}}";
+			var user_rating = "{{reviews.user_rating}}";
+			var description = "{{reviews.description}}";
+
+			$("#rated-table").find('tbody').append("<tr id="+uid+"><td scope='row' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + book_name + "</td><td>" + categories + "</td><td>" + user_rating + "/5</td><td style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + description + "</td></tr>");
+		"{% endfor %}"
+
+		"{% for books in visited_Book %}"
+			var uid = "{{books.isbn_13}}"///{{books.isbn_10}}"
+			var isbn_13 = "{{books.isbn_13}}";
+			// var isbn_10 = "{{books.isbn_10}}";
+
+			// var book_name = "<a style='cursor: pointer;' onclick='bookPage("+isbn_13+")'>" + "{{books.title}}" + "</a>";
+			var book_name = "<a style='cursor: pointer;' href='/book_page/{{books.isbn_13}}' > {{books.title}} </a>";//Enables right click on the link
+			var categories = "{{books.categories}}";
+			var average_rating = "{{books.average_rating}}";
+			var action = "";
+
+			$("#visited-table").find('tbody').append("<tr id="+uid+"><td scope='row' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + book_name + "</td><td>" + categories + "</td><td>" + average_rating + "</td></tr>");
+
+		"{% endfor %}"
+
+		"{% for books in personalized_books %}"
+			var uid = "{{books.isbn_13}}"///{{books.isbn_10}}";
+			var isbn_13 = "{{books.isbn_13}}";
+			// var isbn_10 = "{{books.isbn_10}}";
+
+			// var book_name = "<a style='cursor: pointer;' onclick='bookPage("+isbn_13+")'>" + "{{books.title}}" + "</a>";
+			var book_name = "<a style='cursor: pointer;' href='/book_page/{{books.isbn_13}}' > {{books.title}} </a>";//Enables right click on the link
+			var categories = "{{books.categories}}";
+			var average_rating = "{{books.average_rating}}";
+			var action = "";
+
+			$("#recommendation-table").find('tbody').append("<tr id="+uid+"><td scope='row' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + book_name + "</td><td>" + categories + "</td><td>" + average_rating + "</td></tr>");
+		"{% endfor %}"
+	}
+
+	function removefromhaveread(isbn_13) {
+		isbn_13 = isbn_13.toString()
+		// isbn_10 = isbn_10.toString()
+
+		var remaining_zero = "0".repeat(13-isbn_13.length)
+		isbn_13 = remaining_zero+isbn_13
+		// remaining_zero = ""
+		// remaining_zero = "0".repeat(10-isbn_10.length)
+		// isbn_10 = remaining_zero+isbn_10
+		isbn_10 = "0000000000";
+
+
+		$.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'remove-from-haveread',
+                isbn_13: isbn_13,
+                isbn_10: isbn_10,
+                //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                if(message=="remove_object_success") {
+                	var table = document.getElementById("have-read-table");
+                	for (var i = 0, row; row = table.rows[i]; i++) {
+                		var table_id = isbn_13//+"/"+isbn_10;
+                		if (row.id==table_id) {
+                			document.getElementById("have-read-table").deleteRow(i);
+                		}
+                	}
+                }
+            }
+        })
+
+	}
+
+	function removefromtoread(isbn_13) {
+		isbn_13 = isbn_13.toString()
+		// isbn_10 = isbn_10.toString()
+
+		var remaining_zero = "0".repeat(13-isbn_13.length)
+		isbn_13 = remaining_zero+isbn_13
+		// remaining_zero = ""
+		// remaining_zero = "0".repeat(10-isbn_10.length)
+		// isbn_10 = remaining_zero+isbn_10
+		isbn_10 = "0000000000";
+
+		$.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'remove-from-toread',
+                isbn_13: isbn_13,
+                isbn_10: isbn_10,
+                //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                if(message=="remove_object_success") {
+                	var table = document.getElementById("toread-table");
+                	for (var i = 0, row; row = table.rows[i]; i++) {
+                		var table_id = isbn_13//+"/"+isbn_10;
+                		if (row.id==table_id) {
+                			document.getElementById("toread-table").deleteRow(i);
+                		}
+                	}
+                }
+            }
+        })
+	}
+
+	function removefromreadingnow(isbn_13) {
+		isbn_13 = isbn_13.toString()
+		// isbn_10 = isbn_10.toString()
+
+		var remaining_zero = "0".repeat(13-isbn_13.length)
+		isbn_13 = remaining_zero+isbn_13
+		// remaining_zero = ""
+		// remaining_zero = "0".repeat(10-isbn_10.length)
+		// isbn_10 = remaining_zero+isbn_10
+		isbn_10 = "0000000000";
+
+		$.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'remove-from-reading-now',
+                isbn_13: isbn_13,
+                isbn_10: isbn_10,
+                //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                if(message=="remove_object_success") {
+                	var table = document.getElementById("reading-now-table");
+                	for (var i = 0, row; row = table.rows[i]; i++) {
+                		var table_id = isbn_13//+"/"+isbn_10;
+                		if (row.id==table_id) {
+                			document.getElementById("reading-now-table").deleteRow(i);
+                		}
+                	}
+                }
+            }
+        })
+	}
+
+	function removefromfavourites(isbn_13) {
+		isbn_13 = isbn_13.toString()
+		// isbn_10 = isbn_10.toString()
+
+		var remaining_zero = "0".repeat(13-isbn_13.length)
+		isbn_13 = remaining_zero+isbn_13
+		// remaining_zero = ""
+		// remaining_zero = "0".repeat(10-isbn_10.length)
+		// isbn_10 = remaining_zero+isbn_10
+		isbn_10 = "0000000000";
+
+		$.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'remove-from-favourites',
+                isbn_13: isbn_13,
+                isbn_10: isbn_10,
+                //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                if(message=="remove_object_success") {
+                	var table = document.getElementById("favourites-table");
+                	for (var i = 0, row; row = table.rows[i]; i++) {
+                		var table_id = isbn_13//+"/"+isbn_10;
+                		if (row.id==table_id) {
+                			document.getElementById("favourites-table").deleteRow(i);
+                		}
+                	}
+                }
+            }
+        })
+	}
+
+	var bookPage = function(isbn_13) {
+		var current_URL = window.location.href;
+		current_URL = current_URL.split("/");
+		current_URL = current_URL.slice(0, 3);
+		current_URL[1]="//";
+		current_URL = current_URL.join("");
+        window.location = current_URL+"/book_page/"+isbn_13+"/";
+    }
+</script>
+{% endblock %}

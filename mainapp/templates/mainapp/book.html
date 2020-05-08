@@ -1,0 +1,843 @@
+{% extends "mainapp/base.html" %}
+{% load static %}
+<!--https://www.bootdey.com/snippets/view/product-full-detail-->
+<link rel="stylesheet" type="text/css" href="{% static 'css/book.css' %}"/>
+<style type="text/css">
+    .list-group-scrollbar {
+        max-height:300px;
+        overflow-y:auto; 
+    }
+</style>
+{% block content %}
+<div class="container">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <!-- product -->
+        <div class="product-content product-wrap clearfix product-deatil">
+            <div class="row">
+                <!-- <div class="col-md-3 image_tile"> --><div class="col-sm-4 image_tile"><!-- <div class="col-md-5 col-sm-12 col-xs-12 image_tile"> -->
+                    <div class="product-image">
+                        <img src="{{thumbnail}}" alt="No Image" style="min-width: 250px; min-height: 250px; padding: 13px; display: inline-block;">
+                    </div>
+                </div>
+                <div class="col-sm-8"><!-- <div class="col-md-7 col-sm-12 col-xs-12"> -->
+                	<h2 class="name">
+                		{{title}} by <a href="http://www.google.com/search?q={{authors}}">{{authors}}</a><br>
+                			<div id="star-rating">
+                			</div>
+						</h2>
+                    <hr>
+                    <h3 class="price-container">
+							<button class="btn btn-white btn-default" id="add-to-favourites"><i class="fa fa-star"></i> Add to Favourites </button>
+                            <button class="btn btn-white btn-default" id="reading-now"><i class='fas fa-book-open'></i> Reading Now</button>
+							<button class="btn btn-white btn-default" id="to-read"><i class="glyphicon glyphicon-book" style="color: black";></i> I need to read this</button>
+                            <button class="btn btn-white btn-default" id="have-read"><i class="fa fa-book"></i> I have read this</button>
+						</h3>
+                    
+                    <hr>
+                    <div class="description description-tabs">
+                        <ul id="myTab" class="nav nav-pills">
+                            <li class="active"><a href="#more-information" data-toggle="tab" class="no-margin">Book Description </a></li>
+                            <li class=""><a href="#specifications" data-toggle="tab">Specifications</a></li>
+                            <li class=""><a href="#reviews" data-toggle="tab">Reviews</a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade active in" id="more-information">
+                                <br>
+                                <strong>Description Title</strong>
+                                <p>{{description}}</p>
+                            </div>
+                            <div class="tab-pane fade" id="specifications">
+                                <br>
+                                <dl class="">
+                                    <dt>Author</dt>
+                                    <dd>{{authors}}</dd>
+                                    <br>
+
+                                    <dt>Publisher</dt>
+                                    <dd>{{publisher}}</dd>
+                                    <br>
+
+                                    <dt>Genre</dt>
+                                    <dd>{{categories}}</dd>
+                                    <br>
+
+                                    <dt>Published Date</dt>
+                                    <dd>{{publishedDate}}</dd>
+                                </dl>
+                            </div>
+                            <div class="tab-pane fade" id="reviews">
+                                <br>
+                                <form method="post" class="well padding-bottom-10" onsubmit="return false;">
+                                    {% csrf_token %}
+                                    <textarea rows="3" class="form-control" placeholder="Write a review" id="user_review"></textarea>
+                                    <div class="margin-top-10">
+                                        <button id="submitbutton" type="submit" class="btn btn-sm btn-primary pull-right" onclick="postReview();return false;">
+                                            Submit Review
+                                        </button>
+                                        <div class="row lead">
+                                            &nbsp;&nbsp;<small>Give a rating:</small>&nbsp;<div style="display:inline-block;" id="stars" class="starrr"></div><span id="count" value="0" hidden>0</span>
+                                        </div>
+                                        <!-- <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="" data-original-title="Add Location"><i class="fa fa-location-arrow"></i></a>
+                                        <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="" data-original-title="Add Voice"><i class="fa fa-microphone"></i></a>
+                                        <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="" data-original-title="Add Photo"><i class="fa fa-camera"></i></a>
+                                        <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip" data-placement="bottom" title="" data-original-title="Add File"><i class="fa fa-file"></i></a> -->
+                                    </div>
+                                </form>
+                                <input id="tablequery" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="Search for something in the table.">
+                                <br>
+
+                                <div class="chat-body no-padding profile-message">
+                                    <ul id="reviews-list" class="list-group-scrollbar">
+                                        <!-- <li class="message">
+                                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="online">
+                                            <span class="message-text"> 
+													<a href="javascript:void(0);" class="username">
+														Alisha Molly 
+														<span class="badge">Purchase Verified</span>
+                                            <span class="pull-right">
+															<i class="fa fa-star fa-2x text-primary"></i>
+															<i class="fa fa-star fa-2x text-primary"></i>
+															<i class="fa fa-star fa-2x text-primary"></i>
+															<i class="fa fa-star fa-2x text-primary"></i>
+															<i class="fa fa-star fa-2x text-muted"></i>
+														</span>
+                                            </a>
+                                            Can't divide were divide fish forth fish to. Was can't form the, living life grass darkness very image let unto fowl isn't in blessed fill life yielding above all moved
+                                            </span>
+                                            <ul class="list-inline font-xs">
+                                                <li>
+                                                    <a href="javascript:void(0);" class="text-info"><i class="fa fa-thumbs-up"></i> This was helpful (22)</a>
+                                                </li>
+                                                <li class="pull-right">
+                                                    <small class="text-muted pull-right ultra-light"> Posted 1 year ago </small>
+                                                </li>
+                                            </ul>
+                                        </li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <a href="javascript:void(0);" class="btn btn-success btn-lg">Add to cart ($129.54)</a>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="btn-group pull-right">
+                                <button class="btn btn-white btn-default"><i class="fa fa-star"></i> Add to wishlist </button>
+                                <button class="btn btn-white btn-default"><i class="fa fa-envelope"></i> Contact Seller</button>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <!-- <p>Horizon similar items place location</p> -->
+            <!-- https://bootsnipp.com/snippets/zDQkr -->
+            <hr>
+            <div class="row">
+                <p style="font-weight:bold;font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Similar Book's...</p>
+                <div class="slick_carousel MultiCarousel">
+                    {% for books in similar_books %}
+                        <div class="mt-2 col-md-12">
+                            <a style="cursor: pointer;" href='/book_page/{{books.isbn_13}}'>
+                                <p class="lead img-responsive">
+                                    <img src={{books.thumbnail}} alt="No Image" style="width:100%; display: inline-block; height: 200px;">
+                                </p>
+                                <p align="center">{{books.title}}</p>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- <div class="row">
+                <p style="font-weight:bold; color: grey; font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Similar Book's...</p>
+                <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel"  data-interval="1000">
+                    <div class="MultiCarousel-inner">
+                    </div>
+                    <button class="btn btn-primary leftLst"><</button>
+                    <button class="btn btn-primary rightLst">></button>
+                </div>
+            </div> -->
+            <hr>
+        </div>
+        <!-- end product -->
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.slick_carousel').slick({
+            accessibility:true,
+            arrows:true,
+            prevArrow:'<button class="btn btn-primary leftLst"><</button>',
+            nextArrow:'<button class="btn btn-primary rightLst">></button>',
+            dots:false,
+            draggable:false,
+            mobileFirst:false,
+            slidesPerRow: 6,
+            slidesToShow: 6,
+            slidesToScroll: 6,
+            infinite:true,
+            touchMove:true,
+        });
+    });
+    $('.slick_carousel').on('wheel', (function(e){
+        e.preventDefault();
+        if (e.originalEvent.deltaY < 0){
+            $(this).slick('slickNext');
+        } else {
+            $(this).slick('slickPrev');
+        }
+    }));
+
+    // Block review submit button if user already gave a review
+    "{% if user.is_authenticated %}"
+        function block_review_button() {
+            var user_full_name = '{{ request.user.first_name }}'+' '+'{{ request.user.last_name }}';
+            var all_user_name = document.getElementsByClassName("username");
+            for (var i = 0; i < all_user_name.length; i++) {
+                var commentor = all_user_name[i].innerHTML.split("<")[0];
+                commentor = commentor.split(" ");
+                commentor.shift();
+                commentor.pop();
+                commentor = commentor.join(" ");
+                if (user_full_name==commentor) {
+                    $('#submitbutton').prop('disabled', true);
+                    document.getElementById('user_review').placeholder = "You have already given a review!"
+                    break;
+                }
+            }
+        }
+    "{% endif %}"
+    //
+
+    //jQuery for filtering the reviews based on users search.
+    //Commenting the funtion below and commenting the input with id=tablequery would remove the filter query
+    $(document).ready(function() {
+        $("#tablequery").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#reviews-list li").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+    //
+    //Star rating function
+    // Starrr plugin (https://github.com/dobtco/starrr)
+    var __slice = [].slice;
+
+    (function($, window) {
+        var Starrr;
+
+        Starrr = (function() {
+            Starrr.prototype.defaults = {
+                rating: void 0,
+                numStars: 5,
+                change: function(e, value) {}
+            };
+
+            function Starrr($el, options) {
+                var i, _, _ref,
+                    _this = this;
+
+                this.options = $.extend({}, this.defaults, options);
+                this.$el = $el;
+                _ref = this.defaults;
+                for (i in _ref) {
+                    _ = _ref[i];
+                    if (this.$el.data(i) != null) {
+                        this.options[i] = this.$el.data(i);
+                    }
+                }
+                this.createStars();
+                this.syncRating();
+                this.$el.on('mouseover.starrr', 'span', function(e) {
+                    return _this.syncRating(_this.$el.find('span').index(e.currentTarget) + 1);
+                });
+                this.$el.on('mouseout.starrr', function() {
+                    return _this.syncRating();
+                });
+                this.$el.on('click.starrr', 'span', function(e) {
+                    return _this.setRating(_this.$el.find('span').index(e.currentTarget) + 1);
+                });
+                this.$el.on('starrr:change', this.options.change);
+            }
+
+            Starrr.prototype.createStars = function() {
+                var _i, _ref, _results;
+
+                _results = [];
+                for (_i = 1, _ref = this.options.numStars; 1 <= _ref ? _i <= _ref : _i >= _ref; 1 <= _ref ? _i++ : _i--) {
+                    _results.push(this.$el.append("&nbsp;<span class='glyphicon .glyphicon-star-empty'></span>"));
+                }
+                return _results;
+            };
+
+            Starrr.prototype.setRating = function(rating) {
+                if (this.options.rating === rating) {
+                    rating = void 0;
+                }
+                this.options.rating = rating;
+                this.syncRating();
+                return this.$el.trigger('starrr:change', rating);
+            };
+
+            Starrr.prototype.syncRating = function(rating) {
+                var i, _i, _j, _ref;
+
+                rating || (rating = this.options.rating);
+                if (rating) {
+                    for (i = _i = 0, _ref = rating - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+                        this.$el.find('span').eq(i).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+                    }
+                }
+                if (rating && rating < 5) {
+                    for (i = _j = rating; rating <= 4 ? _j <= 4 : _j >= 4; i = rating <= 4 ? ++_j : --_j) {
+                        this.$el.find('span').eq(i).removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+                    }
+                }
+                if (!rating) {
+                    return this.$el.find('span').removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+                }
+            };
+
+            return Starrr;
+
+        })();
+        return $.fn.extend({
+            starrr: function() {
+                var args, option;
+
+                option = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+                return this.each(function() {
+                    var data;
+
+                    data = $(this).data('star-rating');
+                    if (!data) {
+                        $(this).data('star-rating', (data = new Starrr($(this), option)));
+                    }
+                    if (typeof option === 'string') {
+                        return data[option].apply(data, args);
+                    }
+                });
+            }
+        });
+    })(window.jQuery, window);
+
+    $(function() {
+        return $(".starrr").starrr();
+    });
+
+    $(document).ready(function() {
+
+        $('#stars').on('starrr:change', function(e, value) {
+            $('#count').html(value);
+            $('#count').attr("value", value);
+        });
+
+        $('#stars-existing').on('starrr:change', function(e, value) {
+            $('#count-existing').html(value);
+        });
+    });
+    //End of star rating function
+    function postReview() {
+        var user_review = document.getElementById("user_review").value;
+        var user_rating = $('#count').attr("value");
+        if(user_review=="" || user_rating==0) {
+            Swal.fire({ title: "Error!", text: "You need to give text and star rating!", icon: "error", button: "Continue", });
+            // alert("You need to give text and star rating!");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            data: {
+                functionality: 'create-review',
+                isbn_13: "{{isbn_13}}",
+                isbn_10: "{{isbn_10}}",
+                user_review: user_review,
+                user_rating: user_rating,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                if(message=="not_authenticated") {
+                    var url = "{% url 'mainapp:login' %}";
+                    document.location.href = url;
+                }
+                if(message=="You cannot perform this action!"){
+                    Swal.fire({ title: "Warning!", text: message, icon: "warning", button: "Continue", });
+                }
+                
+                if (message.split("&nbsp;")[0]=="revew_created_successfully") {
+                    var review_data = message.split("&nbsp;");
+                    var user_full_name = review_data[1];
+                    var review_message = review_data[2];
+                    var review_value = parseInt(review_data[3]);
+                    var creation_date = review_data[4];
+                    var new_review_id = review_data[5];
+                    console.log(new_review_id);
+
+                    var stars_icons = "";
+                    for (var i = 1; i<=review_value; i++) {
+                        stars_icons = stars_icons+'<i class="fa fa-star fa-2x text-primary"></i>';
+                    }
+                    for (var j = i; j<=5; j++) {
+                        stars_icons = stars_icons+'<i class="fa fa-star fa-2x text-muted"></i>';
+                    }
+
+                    var no_review_element = document.getElementById("no-review");
+                    if(no_review_element) {
+                        no_review_element.remove();
+                    }
+                    document.getElementById("user_review").value = "";
+                    var like_dislike_id = "like_dislike_"+new_review_id;
+
+                    $("#reviews-list").append('<li class="message" id="'+new_review_id+'"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="online"><span class="message-text"><a href="javascript:void(0);" class="username"> '+user_full_name+' <span class="pull-right">'+stars_icons+'</span></a>'+review_message+'</span><ul class="list-inline font-xs"><li id="'+like_dislike_id+'"><a style="cursor: pointer;" onclick="addlike('+new_review_id+')" class="text-info"><i class="fa fa-thumbs-up">(0)</i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a style="cursor: pointer;" onclick="adddislike('+new_review_id+')" class="text-info"><i class="fa fa-thumbs-down">(0)</i></a></li><li class="pull-right"><small class="text-muted pull-right ultra-light"> Posted at: '+creation_date+'</small></li></ul><br></li>');
+                    block_review_button();
+                }
+            }
+        })
+    }
+
+    //Code for Carousel for showing similar items
+    //$(document).ready(function() {
+    // 
+    //});function carousel_books() {
+    //     var itemsMainDiv = ('.MultiCarousel');
+    //     var itemsDiv = ('.MultiCarousel-inner');
+    //     var itemWidth = "";
+
+    //     $('.leftLst, .rightLst').click(function() {
+    //         var condition = $(this).hasClass("leftLst");
+    //         if (condition) {click(0, this);}
+    //         else {click(1, this);}
+    //     });
+
+    //     ResCarouselSize();
+    //     $(window).resize(function() {
+    //         ResCarouselSize();
+    //     });
+
+    //     //this function define the size of the items
+    //     function ResCarouselSize() {
+    //         var incno = 0;
+    //         var dataItems = ("data-items");
+    //         var itemClass = ('.item');
+    //         var id = 0;
+    //         var btnParentSb = '';
+    //         var itemsSplit = '';
+    //         var sampwidth = $(itemsMainDiv).width();
+    //         var bodyWidth = $('body').width();
+
+    //         $(itemsDiv).each(function() {
+    //             id = id + 1;
+    //             var itemNumbers = $(this).find(itemClass).length;
+    //             btnParentSb = $(this).parent().attr(dataItems);
+    //             itemsSplit = btnParentSb.split(',');
+
+    //             $(this).parent().attr("id", "MultiCarousel" + id);
+    //             if (bodyWidth >= 1200) {
+    //                 incno = itemsSplit[3];
+    //                 itemWidth = sampwidth / incno;
+    //             } else if (bodyWidth >= 992) {
+    //                 incno = itemsSplit[2];
+    //                 itemWidth = sampwidth / incno;
+    //             } else if (bodyWidth >= 768) {
+    //                 incno = itemsSplit[1];
+    //                 itemWidth = sampwidth / incno;
+    //             } else {
+    //                 incno = itemsSplit[0];
+    //                 itemWidth = sampwidth / incno;
+    //             }
+
+    //             $(this).css({
+    //                 'transform': 'translateX(0px)',
+    //                 'width': itemWidth * itemNumbers
+    //             });
+    //             $(this).find(itemClass).each(function() {
+    //                 $(this).outerWidth(itemWidth);
+    //             });
+
+    //             $(".leftLst").addClass("over");
+    //             $(".rightLst").removeClass("over");
+    //         });
+    //     }
+
+    //     //this function used to move the items
+    //     function ResCarousel(e, el, s) {
+    //         var leftBtn = ('.leftLst');
+    //         var rightBtn = ('.rightLst');
+    //         var translateXval = '';
+    //         var divStyle = $(el + ' ' + itemsDiv).css('transform');
+    //         var values = divStyle.match(/-?[\d\.]+/g);
+    //         var xds = Math.abs(values[4]);
+    //         if (e == 0) {
+    //             translateXval = parseInt(xds) - parseInt(itemWidth * s);
+    //             $(el + ' ' + rightBtn).removeClass("over");
+
+    //             if (translateXval <= itemWidth / 2) {
+    //                 translateXval = 0;
+    //                 $(el + ' ' + leftBtn).addClass("over");
+    //             }
+    //         } else if (e == 1) {
+    //             var itemsCondition = $(el).find(itemsDiv).width() - $(el).width();
+    //             translateXval = parseInt(xds) + parseInt(itemWidth * s);
+    //             $(el + ' ' + leftBtn).removeClass("over");
+
+    //             if (translateXval >= itemsCondition - itemWidth / 2) {
+    //                 translateXval = itemsCondition;
+    //                 $(el + ' ' + rightBtn).addClass("over");
+    //             }
+    //         }
+
+    //         $(el + ' ' + itemsDiv).css('transform', 'translateX(' + -translateXval + 'px)');
+    //     }
+
+    //     //It is used to get some elements from btn
+    //     function click(ell, ee) {
+    //         var Parent = "#" + $(ee).parent().attr("id");
+    //         var slide = $(Parent).attr("data-slide");
+    //         ResCarousel(ell, Parent, slide);
+    //     }
+    // };
+
+    //End of code
+
+	window.onload = function() {
+		//Need to code so that averageRating variable is not decimal and dounder to nearest integer
+		var averageRating = "{{averageRating}}";
+		//console.log(averageRating);
+		for (var i = 0; i < averageRating; i++) {
+            //To prevent 4.5 ratings from getting 5 stars
+            if (i==4) {
+                if(averageRating!=5) {
+                    break;
+                }
+            }
+			$('#star-rating').append('<i class="fa fa-star fa-2x text-primary">&nbsp;&nbsp;</i>');
+		}
+		//console.log(i);
+		if (i!=5) {
+			for (var j = i; j < 5; j++) {
+				$('#star-rating').append('<i class="fa fa-star fa-2x text-muted">&nbsp;&nbsp;</i>');
+			}
+		}
+        
+		$('#star-rating').append('<span class="fa fa-2x"><h5>&nbsp;&nbsp;({{ratingsCount}}) Votes</h5></span>');
+		$('#star-rating').append('<a href="javascript:void(0);">&nbsp;&nbsp;{{book_reviews|length}} customer reviews</a>');
+
+        var in_favourite_books = "{{in_favourite_Book}}";
+        var in_reading_books = "{{in_reading_Book}}";
+        var in_to_read_books = "{{in_to_read_Book}}";
+        var in_have_read_books = "{{in_have_read_Book}}";
+
+        if (in_favourite_books=="True") {
+            document.getElementById("add-to-favourites").style.background="#24ad52";
+        }
+        else {
+            document.getElementById("add-to-favourites").style.background="#ffffff";
+        }
+
+        if (in_reading_books=="True") {
+            document.getElementById("reading-now").style.background="#24ad52";
+        }
+        else {
+            document.getElementById("reading-now").style.background="#ffffff";
+        }
+
+        if (in_to_read_books=="True") {
+            document.getElementById("to-read").style.background="#24ad52";
+        }
+        else {
+            document.getElementById("to-read").style.background="#ffffff";
+        }
+
+        if (in_have_read_books=="True") {
+            document.getElementById("have-read").style.background="#24ad52";
+        }
+        else {
+            document.getElementById("have-read").style.background="#ffffff";
+        }
+
+        if ("{{book_reviews|length}}"==0) {
+            //No reviews exists for this book.
+            $("#reviews-list").append("<p id='no-review'>No reviews has been made for this item!</p>");
+        } else {
+            var review_validity = "{{review_validity}}";
+            review_validity = review_validity.replace("[", "").replace("]", "");//or use .substring(1, review_validity.length-1)
+            review_validity = review_validity.split(",");
+            counter = 0;
+            "{% for reviews in book_reviews %}"
+                var user_full_name = "{{reviews.customerID.userid.first_name}} {{reviews.customerID.userid.last_name}}";
+                var review_value = "{{reviews.rating_value}}";
+                var stars_icons = "";
+                for (var i = 1; i<=review_value; i++) {
+                    stars_icons = stars_icons+'<i class="fa fa-star fa-2x text-primary"></i>';
+                }
+                for (var j = i; j<=5; j++) {
+                    stars_icons = stars_icons+'<i class="fa fa-star fa-2x text-muted"></i>';
+                }
+                var verification_statement = "";
+                if (review_validity[counter].trim()=="True") {
+                    verification_statement = ' <span class="badge">Verified Review</span>';
+                } else if (review_validity[counter].trim()=="False") {
+                    verification_statement = "";
+                }
+                counter = counter+1;
+                $("#reviews-list").append('<li class="message" id="{{reviews.pk}}"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="online"><span class="message-text"><a href="javascript:void(0);" class="username"> '+user_full_name+verification_statement+' <span class="pull-right">'+stars_icons+'</span></a>{{reviews.description}}</span><ul class="list-inline font-xs"><li id="like_dislike_{{reviews.pk}}"><a style="cursor: pointer;" onclick="addlike({{reviews.pk}})" class="text-info"><i class="fa fa-thumbs-up">({{reviews.likes.count}})</i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a style="cursor: pointer;" onclick="adddislike({{reviews.pk}})" class="text-info"><i class="fa fa-thumbs-down">({{reviews.dislikes.count}})</i></a></li><li class="pull-right"><small class="text-muted pull-right ultra-light"> Posted at: {{reviews.created_at}} </small></li></ul><br></li>');
+            "{% endfor %}"
+            "{% if user.is_authenticated %}"
+                block_review_button();
+            "{% endif %}"
+        }
+
+        // "{% if user.is_authenticated %}"
+        //     function block_review_button() {
+        //         console.log("RAHHHhhhhhh");
+        //         var user_full_name = '{{ request.user.first_name }}'+' '+'{{ request.user.last_name }}';
+        //         var all_user_name = document.getElementsByClassName("username");
+        //         for (var i = 0; i < all_user_name.length; i++) {
+        //             var commentor = all_user_name[i].innerHTML.split("<")[0];
+        //             commentor = commentor.split(" ");
+        //             commentor.shift();
+        //             commentor.pop();
+        //             commentor = commentor.join(" ");
+        //             if (user_full_name==commentor) {
+        //                 $('#submitbutton').prop('disabled', true);
+        //                 document.getElementById('user_review').placeholder = "You have already gave a review!"
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     block_review_button();
+        // "{% endif %}"
+
+        // "{% for reviews in book_reviews %}"
+        //     //console.log("#############", "{{reviews}}", "{{reviews.bookID}}");
+        // "{% endfor %}"
+
+        // "{% for books in similar_books %}"
+        //     var isbn_13 = "{{books.isbn_13}}";
+        //     var isbn_10 = "{{books.isbn_10}}";
+
+        //     $(".MultiCarousel-inner").append('<div class="item"><div class="pad15"><a style="cursor: pointer;" onclick="bookPage('+isbn_13+')"><p class="lead"><img src="{{books.thumbnail}}" alt="No Image" style="width:100%; display: inline-block; height: 200px;"</p><p>{{books.title}}</p></a></div></div>');
+
+        // "{% endfor %}"
+
+        // carousel_books();
+
+        // "{% if similar_books %}"
+        //     "{% for books in similar_books %}"
+        //         var isbn_13 = "{{books.isbn_13}}";
+        //         var isbn_10 = "{{books.isbn_10}}";
+        //         //console.log(isbn_13);
+        //     "{% endfor %}"
+        // "{% endif %}"
+	}
+
+    var isbn_13 = "{{isbn_13}}";
+    var isbn_10 = "{{isbn_10}}";
+
+    $('#add-to-favourites').click(function() {
+        $.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'add-to-favourites',
+                isbn_13: "{{isbn_13}}",
+                isbn_10: "{{isbn_10}}",
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                if(message=="new_object") {
+                    document.getElementById("add-to-favourites").style.background="#24ad52";
+                }
+                if(message=="remove_object") {
+                    document.getElementById("add-to-favourites").style.background="#ffffff";
+                }
+                if(message=="not_authenticated") {
+                    var url = "{% url 'mainapp:login' %}";
+                    document.location.href = url;
+                }
+                if(message=="You cannot perform this action!"){
+                    Swal.fire({ title: "Warning!", text: message, icon: "warning", button: "Continue", });
+                }
+            }
+        })
+    });
+
+    $('#reading-now').click(function() {
+        console.log("reading-now clicked");
+
+        $.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'reading-now',
+                isbn_13: "{{isbn_13}}",
+                isbn_10: "{{isbn_10}}",
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                if(message=="new_object") {
+                    document.getElementById("reading-now").style.background="#24ad52";
+                }
+                if(message=="remove_object") {
+                    document.getElementById("reading-now").style.background="#ffffff";
+                }
+                if(message=="not_authenticated") {
+                    var url = "{% url 'mainapp:login' %}";
+                    document.location.href = url;
+                }
+                if(message=="You cannot perform this action!"){
+                    Swal.fire({ title: "Warning!", text: message, icon: "warning", button: "Continue", });
+                }
+            }
+        })
+    });
+
+    $('#to-read').click(function() {
+        console.log("to-read clicked");
+
+        $.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'to-read',
+                isbn_13: "{{isbn_13}}",
+                isbn_10: "{{isbn_10}}",
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                if(message=="new_object") {
+                    document.getElementById("to-read").style.background="#24ad52";
+                }
+                if(message=="remove_object") {
+                    document.getElementById("to-read").style.background="#ffffff";
+                }
+                if(message=="not_authenticated") {
+                    var url = "{% url 'mainapp:login' %}";
+                    document.location.href = url;
+                }
+                if(message=="You cannot perform this action!"){
+                    Swal.fire({ title: "Warning!", text: message, icon: "warning", button: "Continue", });
+                }
+            }
+        })
+    });
+
+    $('#have-read').click(function() {
+        console.log("have-read clicked");
+
+        $.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'have-read',
+                isbn_13: "{{isbn_13}}",
+                isbn_10: "{{isbn_10}}",
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                if(message=="new_object") {
+                    document.getElementById("have-read").style.background="#24ad52";
+                }
+                if(message=="remove_object") {
+                    document.getElementById("have-read").style.background="#ffffff";
+                }
+                if(message=="not_authenticated") {
+                    var url = "{% url 'mainapp:login' %}";
+                    document.location.href = url;
+                }
+                if(message=="You cannot perform this action!"){
+                    Swal.fire({ title: "Warning!", text: message, icon: "warning", button: "Continue", });
+                }
+            }
+        })
+    });
+
+    function addlike(review_id){
+        console.log("user liked the review");
+        $.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'like-review',
+                isbn_13: "{{isbn_13}}",
+                isbn_10: "{{isbn_10}}",
+                review_id: review_id,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                console.log(message);
+                var li_id = "like_dislike_"+review_id;
+                var counter_location = document.getElementById(li_id);
+                var current_liked_value = counter_location.children[0].children[0].innerHTML.replace("(","").replace(")","");
+                var current_disliked_value = counter_location.children[1].children[0].innerHTML.replace("(","").replace(")","");
+                if(message=="comment_like_added") {
+                    new_liked_value = parseInt(current_liked_value)+1;
+                    var replacement = '<li id="'+li_id+'"><a style="cursor: pointer;" onclick="addlike('+review_id+')" class="text-info"><i class="fa fa-thumbs-up">('+new_liked_value+')</i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a style="cursor: pointer;" onclick="adddislike('+review_id+')" class="text-info"><i class="fa fa-thumbs-down">('+current_disliked_value+')</i></a></li>'
+                    $('#'+li_id+'').replaceWith(replacement);
+                }
+                if(message=="comment_like_reduced") {
+                    new_liked_value = parseInt(current_liked_value)-1;
+                    var replacement = '<li id="'+li_id+'"><a style="cursor: pointer;" onclick="addlike('+review_id+')" class="text-info"><i class="fa fa-thumbs-up">('+new_liked_value+')</i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a style="cursor: pointer;" onclick="adddislike('+review_id+')" class="text-info"><i class="fa fa-thumbs-down">('+current_disliked_value+')</i></a></li>'
+                    $('#'+li_id+'').replaceWith(replacement);
+                }
+                if(message=="not_authenticated") {
+                    var url = "{% url 'mainapp:login' %}";
+                    document.location.href = url;
+                }
+                if(message=="You cannot perform this action!"){
+                    Swal.fire({ title: "Warning!", text: message, icon: "warning", button: "Continue", });
+                }
+            }
+        })
+    }
+
+    function adddislike(review_id){
+        console.log("user disliked the review");
+        $.ajax({
+            type: "PUT",
+            data: {
+                functionality: 'dislike-review',
+                isbn_13: "{{isbn_13}}",
+                isbn_10: "{{isbn_10}}",
+                review_id: review_id,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(message) {
+                console.log(message);
+                console.log(message);
+                var li_id = "like_dislike_"+review_id;
+                var counter_location = document.getElementById(li_id);
+                var current_liked_value = counter_location.children[0].children[0].innerHTML.replace("(","").replace(")","");
+                var current_disliked_value = counter_location.children[1].children[0].innerHTML.replace("(","").replace(")","");
+                if(message=="comment_dislike_added") {
+                    new_disliked_value = parseInt(current_disliked_value)+1;
+                    var replacement = '<li id="'+li_id+'"><a style="cursor: pointer;" onclick="addlike('+review_id+')" class="text-info"><i class="fa fa-thumbs-up">('+current_liked_value+')</i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a style="cursor: pointer;" onclick="adddislike('+review_id+')" class="text-info"><i class="fa fa-thumbs-down">('+new_disliked_value+')</i></a></li>'
+                    $('#'+li_id+'').replaceWith(replacement);
+                }
+                if(message=="comment_dislike_reduced") {
+                    new_disliked_value = parseInt(current_disliked_value)-1;
+                    var replacement = '<li id="'+li_id+'"><a style="cursor: pointer;" onclick="addlike('+review_id+')" class="text-info"><i class="fa fa-thumbs-up">('+current_liked_value+')</i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a style="cursor: pointer;" onclick="adddislike('+review_id+')" class="text-info"><i class="fa fa-thumbs-down">('+new_disliked_value+')</i></a></li>'
+                    $('#'+li_id+'').replaceWith(replacement);
+                }
+                if(message=="not_authenticated") {
+                    var url = "{% url 'mainapp:login' %}";
+                    document.location.href = url;
+                }
+                if(message=="You cannot perform this action!"){
+                    Swal.fire({ title: "Warning!", text: message, icon: "warning", button: "Continue", });
+                }
+            }
+        })
+    }
+
+    var bookPage = function(isbn_13) {
+            // var current_URL = window.location.href;
+            // current_URL = current_URL.split("/");
+            // current_URL = current_URL.slice(0, 3);
+            // current_URL[1]="//";
+            // current_URL = current_URL.join("");
+            // window.location = current_URL+"/book_page/"+isbn_13;
+            window.location = "{% url 'mainapp:book_page' 1234 %}".replace(/1234/, isbn_13.toString());
+        }
+</script>
+{% endblock %}

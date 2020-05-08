@@ -1,84 +1,272 @@
 {% extends "mainapp/base.html" %}
 {% load static %}
 {% block content %}
-<style type="text/css">
-    a {
-        cursor: pointer;
-    }
-</style>
+<!-- Start of Image Carousel & Search -->
 <div class="container">
-    <form class="col-xl-12" id="searchForm" method="post">{% csrf_token %}
+    <form class="col-xl-12" id="searchForm" method="post">
+        {% csrf_token %}
         <div class="input-group col-md-12">
-            <input style="  font-size: 15px !important;" type="text" id="booksearch" name="booksearch" class="form-control input-lg" placeholder="Search for book" />
+            <input style="  font-size: 15px !important;" type="text" name="booksearch" class="form-control input-lg" placeholder="Search for book"/>
             <span class="input-group-btn">
-				<button style="background-color: white; border-style:none; border-left: solid 1px #ccc;" class="btn btn-info btn-lg" type="submit" name="submit" id="submit">
-					<i style="color:black;" class="glyphicon glyphicon-search"></i>
-				</button>
-			</span>
+                <button style="background-color: white; border-style:none; border-left: solid 1px #ccc;" class="btn btn-info btn-lg" type="submit">
+                    <i style="color:black;" class="glyphicon glyphicon-search"></i>
+                </button>
+            </span>
         </div>
     </form>
+    <br>
+    {% if carousel %}
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+                <li data-target="#myCarousel" data-slide-to="3"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="{% static 'assets/library1.jpg' %}" alt="Library Image">
+                </div>
+
+                <div class="item">
+                    <img src="{% static 'assets/library2.jpg' %}" alt="Library Image">
+                </div>
+
+                <div class="item">
+                    <img src="{% static 'assets/library3.jpg' %}" alt="Library Image">
+                </div>
+
+                <div class="item">
+                    <img src="{% static 'assets/library4.jpg' %}" alt="Library Image">
+                </div>
+            </div>
+
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    {% endif  %}
 </div>
-<div class="container" id="searchresult">
-    <div>
-        <ul class="list-group list-group-flush" id="resultlist"></ul>
+<div class="container">
+    <!-- <div>
+        <ul class="list-group list-group-flush" id="searchresult"></ul>
+    </div> -->
+    {% if bookresults %}
+        {% if bookresults|length > 0 %}
+            {% for books in bookresults %}
+                <div class="row" id="{{books.uid}}">
+                    <br>
+                    <div class="col-sm-2">
+                        <img alt="" src="{{books.thumbnail}}" style="height: 150px; width: 150px" />
+                    </div>
+                    <div class="col-sm-8">
+                        <h4>
+                            <!-- <a style="cursor: pointer;" onclick="goToBookPage('+isbn_13+')">' + volumeinfo + '</a> -->
+                            <a style="cursor: pointer;" href="/book_page/{{books.isbn_13}}">{{books.title}}</a>
+                        </h4>
+                        <p> Authors: {{books.authors}}</p>
+                        <p>{{books.ratingsCount}} ratings, {{books.averageRating}} average rating</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>empty</p>
+        {% endif %}
+    {% else %}
+        {% if booksearch %}
+            <p style="left: 0; line-height: 200px; margin-top: -100px; position: absolute; text-align: center; top: 50%; width: 100%; font-weight: 900;">Sorry, we could't find any results matching {{booksearch}}</p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        {% endif %}
+    {% endif %}
+</div>
+<!-- End of Image Carousel & Search -->
+<hr>
+<!-- Recently added books carousel -->
+{% if recently_added_books %}
+<div class="container">
+    <!-- <h1>Recently Added Books!</h1> -->
+    <div class="row">
+        <p style="font-weight:bold;font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recently Added Books...</p>
+        <div class="slick_carousel MultiCarousel">
+            {% for books in recently_added_books %}
+                <div class="col-md-12">
+                    <a style="cursor: pointer;" href='/book_page/{{books.isbn_13}}'>
+                        <p class="lead img-responsive">
+                            <img src={{books.thumbnail}} alt="No Image" style="width:100%; display: inline-block; height: 200px;">
+                        </p>
+                        <p align="center">{{books.title}}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
+{% endif  %}
+<!-- average_rating_recommendation books carousel -->
+{% if average_rating_recommendation %}
+<div class="container">
+    <div class="row">
+        <p style="font-weight:bold;font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Books Based on Ratings...</p>
+        <div class="slick_carousel MultiCarousel">
+            {% for books in average_rating_recommendation %}
+                <div class="col-md-12">
+                    <a style="cursor: pointer;" href='/book_page/{{books.isbn_13}}'>
+                        <p class="lead img-responsive">
+                            <img src={{books.thumbnail}} alt="No Image" style="width:100%; display: inline-block; height: 200px;">
+                        </p>
+                        <p align="center">{{books.title}}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif  %}
+<!-- other_user_favourite_books books carousel -->
+{% if user.is_authenticated %}
+    {% if other_user_favourite_books %}
+        <div class="container">
+            <div class="row">
+                <p style="font-weight:bold;font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Favourite books from similar users'...</p>
+                <div class="slick_carousel MultiCarousel">
+                    {% for books in other_user_favourite_books %}
+                        <div class="col-md-12">
+                            <a style="cursor: pointer;" href='/book_page/{{books.isbn_13}}'>
+                                <p class="lead img-responsive">
+                                    <img src={{books.thumbnail}} alt="No Image" style="width:100%; display: inline-block; height: 200px;">
+                                </p>
+                                <p align="center">{{books.title}}</p>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}
 <script type="text/javascript">
-    window.onload = function() {
-        "{% for items in items %}"
-        var checkElement = document.getElementById("{{items.pk}}");
-        var description = "{{items.description}}".split(".")[0]+".";
-        if (!checkElement) {
-            $("#resultlist").append("<div class='row' id= {{items.id}}><br><div class='col-sm-2'><img alt='' src={{items.imageurl}} style='height: 150px; width: 150px' /></div><div class='col-sm-8'><h4><a onclick='itemPage(this)' >{{items.title}}</a></h4><p>" + description + "</p><h4>Current Price: £ {{items.price}}</h4><h5>Ends at: {{items.expiredate}}</h5></div></div>");
-        }
-        "{% endfor %}"
-    }
-
-    $('#searchForm').submit(function(ev) {
-        ev.preventDefault();
-        if (window.performance) {
-            console.info("window.performance works fine on this browser");
-        }
-        if (performance.navigation.type == 1) {
-            console.info("This page is reloaded");
-        } else {
-            console.info("This page is not reloaded");
-        }
-
-        var searchvalue = document.getElementById("booksearch").value;
-        var list = document.getElementById("resultlist");
-        while (list.hasChildNodes()) {
-            list.removeChild(list.firstChild);
-        }
-
-        $.ajax({
-            type: "GET",
-            data: {
-                searchvalue: searchvalue,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function(data) {
-                if (data == "No results found, search for something more specific.") {
-                    alert(data);
-                } else {
-                    for (var j = 0; j < data.items.length; j++) {
-
-                        var checkElement = document.getElementById(data.items[j].id);
-
-                        if (!checkElement) {
-                            $("#resultlist").append('<div class="row" id=' + data.items[j].id + '><br><div class="col-sm-2"><img alt="" src=' + data.items[j].imageurl + ' style="height: 150px; width: 150px" /></div><div class="col-sm-8"><h4><a onclick="itemPage(this)">' + data.items[j].title + '</a></h4><p>' + data.items[j].description.split(".")[0] + '</p><h4>Current Price: £' + data.items[j].price + '</h4><h5>Ends at: ' + data.items[j].expiredate + '</h5></div></div>');
-                        }
-                    }
-                }
-            }
-        })
-
+    $(document).ready(function(){
+        $('.slick_carousel').slick({
+            accessibility:true,
+            arrows:true,
+            prevArrow:'<button class="btn btn-primary leftLst"><</button>',
+            nextArrow:'<button class="btn btn-primary rightLst">></button>',
+            dots:false,
+            draggable:false,
+            mobileFirst:false,
+            slidesPerRow: 6,
+            slidesToShow: 6,
+            slidesToScroll: 6,
+            infinite:true,
+            touchMove:true,
+        });
     });
+    $('.slick_carousel').on('wheel', (function(e){
+        e.preventDefault();
+        if (e.originalEvent.deltaY < 0){
+            $(this).slick('slickNext');
+        } else {
+            $(this).slick('slickPrev');
+        }
+    }));
 
-    var itemPage = function(buttonElement) {
-        var fkvalue = buttonElement.parentElement.parentElement.parentElement.id;
-        sessionStorage.setItem("itemid", fkvalue);
-        window.location.href = "itempage.html";
+    var goToBookPage = function(isbn_13) {
+        console.log(isbn_13, "Inside goToBookPage function");
+        window.location.href = "book_page/"+isbn_13+"/";
     }
+
+    //Brower Type
+    function user_Browser_Version() {
+        var navUserAgent = navigator.userAgent;
+        var browserName = navigator.appName;
+        var browserVersion = '' + parseFloat(navigator.appVersion);
+        var majorVersion = parseInt(navigator.appVersion, 10);
+        var tempNameOffset, tempVersionOffset, tempVersion;
+
+        if ((tempVersionOffset = navUserAgent.indexOf("Opera")) != -1) {
+            browserName = "Opera";
+            browserVersion = navUserAgent.substring(tempVersionOffset + 6);
+            if ((tempVersionOffset = navUserAgent.indexOf("Version")) != -1)
+                browserVersion = navUserAgent.substring(tempVersionOffset + 8);
+        } else if ((tempVersionOffset = navUserAgent.indexOf("MSIE")) != -1) {
+            browserName = "Microsoft Internet Explorer";
+            browserVersion = navUserAgent.substring(tempVersionOffset + 5);
+        } else if ((tempVersionOffset = navUserAgent.indexOf("Chrome")) != -1) {
+            browserName = "Chrome";
+            browserVersion = navUserAgent.substring(tempVersionOffset + 7);
+        } else if ((tempVersionOffset = navUserAgent.indexOf("Safari")) != -1) {
+            browserName = "Safari";
+            browserVersion = navUserAgent.substring(tempVersionOffset + 7);
+            if ((tempVersionOffset = navUserAgent.indexOf("Version")) != -1)
+                browserVersion = navUserAgent.substring(tempVersionOffset + 8);
+        } else if ((tempVersionOffset = navUserAgent.indexOf("Firefox")) != -1) {
+            browserName = "Firefox";
+            browserVersion = navUserAgent.substring(tempVersionOffset + 8);
+        } else if ((tempNameOffset = navUserAgent.lastIndexOf(' ') + 1) < (tempVersionOffset = navUserAgent.lastIndexOf('/'))) {
+            browserName = navUserAgent.substring(tempNameOffset, tempVersionOffset);
+            browserVersion = navUserAgent.substring(tempVersionOffset + 1);
+            if (browserName.toLowerCase() == browserName.toUpperCase()) {
+                browserName = navigator.appName;
+            }
+        }
+
+        // trim version
+        if ((tempVersion = browserVersion.indexOf(";")) != -1)
+            browserVersion = browserVersion.substring(0, tempVersion);
+        if ((tempVersion = browserVersion.indexOf(" ")) != -1)
+            browserVersion = browserVersion.substring(0, tempVersion);
+
+        //alert("BrowserName = " + browserName + "\n" + "Version = " + browserVersion);
+        return browserName;
+    }
+
+    function ipLookUp() {
+        var user_country = "Unknown";
+        $.ajax('http://ip-api.com/json')
+            .then(
+                function success(response) {
+                   user_country = response.country;
+                   user_browser = user_Browser_Version();
+                   $.ajax({
+                        type: "POST",
+                        url: "add_user_country_browser/",
+                        data: {
+                            user_country: user_country,
+                            user_browser: user_browser,
+                            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        success: function(response)
+                        {
+                        }
+                   });
+                },
+                function fail(data, status) {
+                    user_country =  "Unknowns";
+                    user_browser = user_Browser_Version();
+                    $.ajax({
+                        type: "POST",
+                        url: "add_user_country_browser/",
+                        data: {
+                            user_country: user_country,
+                            user_browser: user_browser,
+                            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        success: function(response)
+                        {
+                        }
+                   });
+                }
+            );
+        return user_country;
+    }
+    ipLookUp();
 </script>
 {% endblock %}

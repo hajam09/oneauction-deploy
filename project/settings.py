@@ -135,9 +135,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR + '/mainapp', 'static'),
 )
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 INTERNAL_IPS = ['127.0.0.1']

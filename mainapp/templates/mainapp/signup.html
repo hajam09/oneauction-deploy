@@ -2,10 +2,9 @@
 {% load static %}
 {% block content %}
 <div class="container">
-    <form class="form-horizontal" role="form" method="post">
-        <!--action="{% url 'mainapp:signup' %}"-->
+    <form class="form-horizontal" role="form" method="post"><!--action="{% url 'mainapp:signup' %}"-->
         {% csrf_token %}
-        <h2>Sign Up Form</h2>
+        <h2>Registration Form</h2>
         <div class="form-group">
             <label for="fullname" class="col-sm-3 control-label">Full Name</label>
             <div class="col-sm-9">
@@ -22,26 +21,73 @@
             <label for="password" class="col-sm-3 control-label">Password</label>
             <div class="col-sm-9">
                 <input type="password" id="password" name="password" placeholder="Password" minlength="8" class="form-control" required/>
+                <br><li id="letter" class="invalid" style="list-style-type: none;">&nbsp;&nbsp;At least <strong>one letter</strong></li>
+                <li id="capital" class="invalid" style="list-style-type: none;">&nbsp;&nbsp;At least <strong>one capital letter</strong></li>
+                <li id="number" class="invalid" style="list-style-type: none;">&nbsp;&nbsp;At least <strong>one number</strong></li>
+                <li id="length" class="invalid" style="list-style-type: none;">&nbsp;&nbsp;Be at least <strong>8 characters</strong></li>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="password" class="col-sm-3 control-label">Repeat Password</label>
-            <div class="col-sm-9">
-                <input type="password" id="password2" name="password2" placeholder="Password" minlength="8" class="form-control" required/>
-            </div>
+            <!-- <div id="pswd_info">
+                <h4>Password Requirements:</h4>
+                <ul>
+                    <li id="letter" class="invalid">At least <strong>one letter</strong></li>
+                    <li id="capital" class="invalid">At least <strong>one capital letter</strong></li>
+                    <li id="number" class="invalid">At least <strong>one number</strong></li>
+                    <li id="length" class="invalid">Be at least <strong>8 characters</strong></li>
+                </ul>
+            </div> -->
         </div>
         <div class="form-group">
             <label for="birthDate" class="col-sm-3 control-label">Date of Birth</label>
             <div class="col-sm-9">
-                <input type="date" id="birthDate" name="birthDate" class="form-control" required/>
+                <input type="date" id="birthDate" name="birthDate"  class="form-control" required/>
             </div>
         </div>
+        <!-- /.form-group -->
+        <div class="form-group">
+            <label class="control-label col-sm-3">Gender</label>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label class="radio-inline">
+                            <input type="radio" id="gender" name="gender" value="Female">Female
+                        </label>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="radio-inline">
+                            <input type="radio" id="gender" name="gender" value="Male">Male
+                        </label>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="radio-inline">
+                            <input type="radio" id="gender" name="gender" value="Unknown">Unknown
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="genres" class="col-sm-3 control-label">Genres (Choose atleast 3)</label>
+            <div class="col-sm-9">
+                <input id="currentgenre" list="browsers" name="browser" placeholder="Add a genre" class="form-control"><br>
+                <button onclick="addgenres(this);return false;" class="btn btn-info" id="addgenre" type="submit">Add Genre</button>
+                <datalist id="browsers"></datalist>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="genres" class="col-sm-3 control-label">Your Chosen Genres</label>
+            <div class="col-sm-9">
+            	<ul class="list-group" id="usergenre" name="genrevalue"></ul>
+            </div>
+            
+        </div>
+
         <!-- /.form-group -->
         <div class="form-group">
             <div class="col-sm-9 col-sm-offset-3">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox">I accept <a href="#">terms</a>
+                        <input type="checkbox" id="terms">I accept <a href="#" data-toggle="modal" data-target="#exampleModal">terms</a>
                     </label>
                 </div>
             </div>
@@ -53,33 +99,88 @@
             </div>
         </div>
     </form>
+    <!-- /form -->
 </div>
-
+<!-- Modal for terms & conditions -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Terms and Conditions</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ol>
+                    <b><li>What is the right to data portability?</li></b>
+                    <ul>The right to data portability gives individuals the right to receive personal data they have provided to a controller in a structured, commonly used and machine readable format. It also gives them the right to request that a controller transmits this data directly to another controller.</ul>
+                    <b><li>What does the right apply to?</li></b>
+                    <ul>Information is only within the scope of the right to data portability if it is personal data of the individual that they have provided to you.</ul>
+                    <b><li>What does ‘provided to a controller’ mean?</li></b>
+                    <ul>Sometimes the personal data an individual has provided to you will be easy to identify (eg their mailing address, username, age). However, the meaning of data ‘provided to’ you is not limited to this. It is also personal data resulting from observation of an individual’s activities (eg where using a device or service). This may include: history of website usage or search activities; traffic and location data; or ‘raw’ data processed by connected objects such as smart meters and wearable devices.</ul>
+                    <b><li>What personal information are we colleting from you?</li></b>
+                    <ul>We collect your fullname, date-of-birth, gender, IP address and the location of country.</ul>
+                    <b><li>Why are we collecting this from you?</li></b>
+                    <ul>So you can utilise full features from our website and it would be very useful for our metrics.</ul>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ./container -->
 <script type="text/javascript">
-    window.onload = function() {
-        /* Code to prevent users from choosing future data-of-birth*/
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1; //January is 0!
-        var yyyy = today.getFullYear();
-        if (dd < 10) {
-            dd = '0' + dd
-        }
-        if (mm < 10) {
-            mm = '0' + mm
-        }
-        today = yyyy + '-' + mm + '-' + dd;
-        document.getElementById("birthDate").setAttribute("max", today);
-    }
-
-    function postTosignup() {
+    function postTosignup(){
         var fullname = document.getElementById("fullname").value;
         var email = document.getElementById("email").value;
         var password = document.getElementById("password").value;
-        var password2 = document.getElementById("password2").value;
         var birthDate = document.getElementById("birthDate").value;
+        var radios = document.getElementsByName('gender');
+        var gender = "Unknown";
+        var check_box = document.getElementById("terms").checked
+        console.log(check_box);
+        for(var i = 0, length = radios.length; i < length; i++)
+            {
+                if(radios[i].checked)
+                {
+                    if(radios[i].value=="Male"){
+                        gender = "Male";
+                    }
+                    if(radios[i].value=="Female")
+                    {
+                        gender = "Female";
+                    }
+                    break;
+                }
+            }
+        var usergenre = document.getElementById("usergenre");
+        var listofgenre = [];
+        for (var ii = 0; ii < usergenre.childNodes.length; ii++){listofgenre.push(usergenre.childNodes[ii].id);}
+        if(fullname == null || fullname == "" || fullname.length<5){
+        	if(fullname == null || fullname == ""){
+        		Swal.fire({ title: "Error!", text: "Please check if your full name entered in the full name field is not empty!", icon: "error", button: "Continue", });
+        	} else if(fullname.length<5){
+        		Swal.fire({ title: "Error!", text: "Your full name is too short! Please enter at least 4 characters!", icon: "error", button: "Continue", });
+        	} else{
+        		Swal.fire({ title: "Error!", text: "Please check your full name field", icon: "error", button: "Continue", });
+        	}
+        } else if(email == null | email == "" || email.includes(".")==false || email.includes("@")== false){
+        	if(email == null | email == ""){
+        		Swal.fire({ title: "Error!", text: "Please check if e-mail entered in the e-mail field is not empty!", icon: "error", button: "Continue", });
+        	} else if(email.includes("@")== false || email.includes(".")==false){
+        		Swal.fire({ title: "Error!", text: "Please check if e-mail entered in the e-mail field is valid!", icon: "error", button: "Continue", });
+        	} else{
+        		Swal.fire({ title: "Error!", text: "Please check your email field", icon: "error", button: "Continue", });
+        	}     
+        } else if(birthDate == null || birthDate == ""){
+            Swal.fire({ title: "Error!", text: "Please check your date-of-birth field", icon: "error", button: "Continue", });
+        } else if(listofgenre.length<3){
+            Swal.fire({ title: "Error!", text: "Ensure you have at-least 3 favourite genres", icon: "error", button: "Continue", });
+        } else if(check_box==false){
+            Swal.fire({ title: "Error!", text: "Please agree to out Terms & Conditions", icon: "error", button: "Continue", });
+        } else {
+            listofgenre = String(listofgenre);
 
-        if (fullname != null && fullname != "", email != null && email != "", password != null && password != "", birthDate != null && birthDate != "", password == password2) {
             $.ajax({
                 type: "POST",
                 data: {
@@ -87,22 +188,177 @@
                     email: email,
                     password: password,
                     birthDate: birthDate,
+                    gender: gender,
+                    listofgenre: listofgenre,
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                 },
-                success: function(info) {
-                    if (info != "An account already exists for this email address, please try again!") {
+                success: function(info){
+                    if(info=="Password is not secure enough!"){
+                        // alert(info);
+                        Swal.fire({ title: "Warning!", text: info, icon: "warning", button: "Continue", });
+                    } else if (info=="An account already exists for this email address, please try again!"){
+                        // alert(info);
+                        Swal.fire({ title: "Error!", text: info, icon: "error", button: "Continue", });
+                    } else {
                         var url = "{% url 'mainapp:login' %}";
                         document.location.href = url;
-                    } else {
-                        alert(info);
                     }
                 }
             })
-
-        } else {
-            alert("Something's wrong, please check your fields again!");
-            return false;
         }
+
+        // if(fullname != null && fullname != "", email != null && email != "", password != null && password != "", birthDate != null && birthDate != "", gender != null && gender != "", listofgenre.length>=3, check_box==true)
+        // {
+        //     listofgenre = String(listofgenre);
+
+        //     $.ajax({
+        //         type: "POST",
+        //         data: {
+        //             fullname: fullname,
+        //             email: email,
+        //             password: password,
+        //             birthDate: birthDate,
+        //             gender: gender,
+        //             listofgenre: listofgenre,
+        //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        //         },
+        //         success: function(info){
+        //             if(info=="Password is not secure enough!"){
+        //                 // alert(info);
+        //                 Swal.fire({ title: "Warning!", text: info, icon: "warning", button: "Continue", });
+        //             } else if (info=="An account already exists for this email address, please try again!"){
+        //                 // alert(info);
+        //                 Swal.fire({ title: "Error!", text: info, icon: "error", button: "Continue", });
+        //             } else {
+        //                 var url = "{% url 'mainapp:login' %}";
+        //                 document.location.href = url;
+        //             }
+        //             // if(info!="An account already exists for this email address, please try again!"){
+        //             //     var url = "{% url 'mainapp:login' %}";
+        //             //     document.location.href = url;
+        //             // }
+        //             // else{
+        //             //     alert(info);
+        //             // }
+        //         }
+        //     })
+        // }
+        // else{
+        //     // Swal.fire({ title: "Warning!", text: "Please Fill All Required Field", icon: "warning", button: "Continue", });
+        //     // alert("Please Fill All Required Field");
+        //     return false;
+        // }
     }
+    
+	function addgenres(buttonELement){
+		var ugenre = document.getElementById("currentgenre").value;
+		if(ugenre && !document.getElementById(ugenre)){
+			//$("#usergenre").append('<div id="'+ugenre+'"<li name="genrename" class="list-group-item" id="'+ugenre+'">'+ugenre+'</li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="deletegenre(this);return false;" type="button" class="btn btn-danger">Delete</button></div>');
+            $("#usergenre").append('<div id="'+ugenre+'"> <div class="col-xs-10 col-sm-7"> <li name="genrename" class="list-group-item" id="'+ugenre+'">' +ugenre+ '</li></div> <div class="col-xs-10 col-sm-3"> <button onclick="deletegenre(this);return false;" type="button" class="btn btn-danger">Delete</button> </div></div>');
+			document.getElementById("currentgenre").value = "";
+			var genreElementID = ugenre+"option";
+			var deletegenreoption = document.getElementById(genreElementID);
+			deletegenreoption.remove();
+		}
+	}
+
+	function deletegenre(buttonELement){
+        console.log("AA");
+		var parent = buttonELement.parentNode.parentNode.id;//.parentNode.id;
+		var el = document.getElementById(parent);
+        console.log(el)
+		el.remove();
+        //May have error in the future because of this if thats the case then remove the code from here to ..
+        var genreslist = [];
+        "{% for categories in categories %}"
+            genreslist.push("{{categories}}")
+        "{% endfor %}"
+        //... here and uncommet the code below
+		//var genreslist = ['Action and adventure', 'Anthology', 'Autobiography', 'Biography', 'Book review', 'Classic', 'Comic book', 'Crime', 'Dictionary', 'Drama', 'Encyclopedia', 'Essay', 'Fable', 'Fairy Tale', 'Fan Fiction', 'Fantasy', 'Historical Fiction', 'Horror', 'Humor', 'Legend', 'Memoir', 'Mystery', 'Mythology', 'Realistic Fiction', 'Romance', 'Science Fiction', 'Self-Help Book', 'Speech', 'Suspense', 'Textbook', 'Thriller'];
+		updategenres(genreslist)
+	}
+
+	function updategenres(genreslist){
+		console.log("updategenres");
+		$.ajax({
+	 		success: function(){
+	 			for(var j=0; j<genreslist.length; j++){
+	 				var ell = genreslist[j]+"option"
+	 				if(!document.getElementById(ell)){
+	 					$("#browsers").append('<option id="'+genreslist[j]+'option" value="'+genreslist[j]+'">')
+	 				}
+	 			}
+	 		}
+	 	})
+	}
+
+
+	 window.onload = function()
+	 {
+        //Start: code for password security validator
+        //https://www.webdesignerdepot.com/2012/01/password-strength-verification-with-jquery/
+        $('input[type=password]').keyup(function() {
+            // keyup code here
+            var pswd = $(this).val();
+            //validate the length
+            if ( pswd.length < 8 ) {
+                $('#length').removeClass('valid').addClass('invalid');
+            } else {
+                $('#length').removeClass('invalid').addClass('valid');
+            }
+
+            //validate letter
+            if ( pswd.match(/[A-z]/) ) {
+                $('#letter').removeClass('invalid').addClass('valid');
+            } else {
+                $('#letter').removeClass('valid').addClass('invalid');
+            }
+
+            //validate capital letter
+            if ( pswd.match(/[A-Z]/) ) {
+                $('#capital').removeClass('invalid').addClass('valid');
+            } else {
+                $('#capital').removeClass('valid').addClass('invalid');
+            }
+
+            //validate number
+            if ( pswd.match(/\d/) ) {
+                $('#number').removeClass('invalid').addClass('valid');
+            } else {
+                $('#number').removeClass('valid').addClass('invalid');
+            }
+        }).focus(function() {
+            $('#pswd_info').show();
+        }).blur(function() {
+            $('#pswd_info').hide();
+        });
+        //End: code for password security validator
+
+        //May have error in the future because of this if thats the case then remove the code from here to ..
+        var genreslist = [];
+        "{% for categories in categories %}"
+            genreslist.push("{{categories}}")
+        "{% endfor %}"
+        //... here and uncommet the code below
+	 	//var genreslist = ['Action and adventure', 'Anthology', 'Autobiography', 'Biography', 'Book review', 'Classic', 'Comic book', 'Crime', 'Dictionary', 'Drama', 'Encyclopedia', 'Essay', 'Fable', 'Fairy Tale', 'Fan Fiction', 'Fantasy', 'Historical Fiction', 'Horror', 'Humor', 'Legend', 'Memoir', 'Mystery', 'Mythology', 'Realistic Fiction', 'Romance', 'Science Fiction', 'Self-Help Book', 'Speech', 'Suspense', 'Textbook', 'Thriller'];
+
+	 	updategenres(genreslist);
+
+        /* Code to prevent users from choosing future data-of-birth*/
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if(dd<10){
+            dd='0'+dd
+        }
+        if(mm<10){
+            mm='0'+mm
+        }
+        today = yyyy+'-'+mm+'-'+dd;
+        document.getElementById("birthDate").setAttribute("max", today);
+        }
+        console.log("AA");
 </script>
 {% endblock %}

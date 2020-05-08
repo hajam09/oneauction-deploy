@@ -1,23 +1,35 @@
 from django.db import models
 from django.contrib.auth.models import User
+import jsonfield
 # Create your models here.
 
-class CustomerProfile(models.Model):
-	userid = models.ForeignKey(User, on_delete=models.CASCADE)#Onetoone
+class CustomerAccountProfile(models.Model):
+	userid = models.ForeignKey(User, on_delete=models.CASCADE)
 	birthDate = models.DateField()
-	email = models.CharField(max_length=1000, default="")
+	gender = models.CharField(max_length=1000)
+	userfavouritegenre =  models.CharField(max_length=1000)
 
-class Item(models.Model):
-	seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seller')
-	title = models.CharField(max_length=1000)
-	description = models.CharField(max_length=9999)
-	expiredate =  models.DateTimeField()
-	imagename = models.CharField(max_length=1000)
-	imageurl = models.CharField(max_length=1000)
-	bidders = models.CharField(max_length=9999, default="")
-	price = models.DecimalField(max_digits=9, decimal_places=2, null=True)
-	status = models.BooleanField(default=False)
-	buyer = models.ForeignKey(User, on_delete=models.PROTECT, related_name='buyer')
+class Book(models.Model):
+	isbn_13 = models.CharField(max_length=15)
+	isbn_10 = models.CharField(max_length=15)
+	title =  models.CharField(max_length=1000, default=None)
+	book_data = jsonfield.JSONField()
+	favourites = models.ManyToManyField(CustomerAccountProfile, related_name='favourites', default="none")
+	readingnow = models.ManyToManyField(CustomerAccountProfile, related_name='readingnow', default="none")
+	toread = models.ManyToManyField(CustomerAccountProfile, related_name='toread', default="none")
+	haveread = models.ManyToManyField(CustomerAccountProfile, related_name='haveread' ,default="none")
 
-	def __str__ (self):
-		return self.title
+class Review(models.Model):
+	bookID = models.ForeignKey(Book, on_delete=models.CASCADE)
+	customerID = models.ForeignKey(CustomerAccountProfile, on_delete=models.CASCADE)
+	description = models.TextField(max_length=1000)
+	rating_value = models.IntegerField(default=0)
+	created_at = models.DateTimeField()
+	likes = models.ManyToManyField(CustomerAccountProfile, related_name='likes', default="none")
+	dislikes = models.ManyToManyField(CustomerAccountProfile, related_name='dislikes', default="none")
+
+class Category(models.Model):
+	name = models.CharField(max_length=1000)
+
+class Metrics(models.Model):
+	metrics_data = jsonfield.JSONField()

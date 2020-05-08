@@ -14,49 +14,63 @@
 	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+	    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+	    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
-		<title>AuctionSystem</title>
+		<title>LibrarySystem</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/book.css' %}"/>
+
+		<!-- Sweet Alert Box -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+		<!-- Carousel Library -->
+		<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+		<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 	</head>
+	<style type="text/css">
+		/*.nav>li{
+			display: inline-block;
+		}*/
+	</style>
 	<body>
-
+		
 	    <!--Start of Navigation bar-->
-	    <nav class="navbar navbar-inverse"><!--navbar-default for white navbar-->
+	    <nav class="navbar navbar-inverse" style="background-color: #002952"><!--navbar-default for white navbar-->
 	    	<div class="container-fluid">
 	    		<div class="navbar-header">
-	    			<a class="navbar-brand" href="{% url 'mainapp:index' %}">OneAuction</a>
+	    			<a class="navbar-brand" href="{% url 'mainapp:index' %}" >BookWire</a>
 	    		</div>
-	    		<ul class="nav navbar-nav navbar-right">
-	    			<li class="active"><a href="{% url 'mainapp:index' %}">Home</a></li>
+	    		<ul class="nav navbar-nav navbar-right" style="background-color: #002952">
+	    			<li class="active"><a href="{% url 'mainapp:index' %}" style="background-color: #002952">Home</a></li>
 	    			{% if user.is_authenticated %}
-	    			<li class="dropdown">
-	    				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
-	    				<ul class="dropdown-menu">
-	    					<li><a href="{% url 'mainapp:log_out' %}"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
-          					<li><a href="{% url 'mainapp:update_profile' %}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
-        				</ul>
-	    			</li>
-	    			<li class="dropdown">
-	    				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Quick Links<span class="caret"></span></a>
-	    				<ul class="dropdown-menu">
-	    					<li><a href="{% url 'mainapp:new_item' %}"><span class="glyphicon glyphicon glyphicon-plus"></span> Post Item</a></li>
-	    					<li><a href="{% url 'mainapp:closedauction' %}"><span class="glyphicon glyphicon-folder-close"></span> Closed Auctions</a></li>
-	    					<li><a href="{% url 'mainapp:user_biddings' %}"><span class="glyphicon glyphicon-list-alt"></span> My Biddings</a></li>
-        				</ul>
-	    			</li>
+	    				{% if user.is_superuser %}
+	    					<li class="dropdown">
+	    						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+	    						<ul class="dropdown-menu">
+	    							<li style="display: inline-block;"><a href="{% url 'mainapp:log_out' %}"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
+	    							<li style="display: inline-block;"><a href="{% url 'mainapp:dashboard' %}"><span class="glyphicon glyphicon-blackboard"></span> Dashboard</a></li>
+	    						</ul>
+	    					</li>
+	    				{% else %}
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+									<ul class="dropdown-menu">
+									<li style="display: inline-block;"><a href="{% url 'mainapp:log_out' %}"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
+									<li style="display: inline-block;"><a href="{% url 'mainapp:update_profile' %}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+									<li style="display: inline-block;"><a href="{% url 'mainapp:user_shelf' %}"><span class="glyphicon glyphicon-book"></span> My Shelf</a></li>
+								</ul>
+							</li>
+	    				{% endif %}
 	    			{% else %}
 	    			<li class="dropdown">
-	    				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Login/Sign Up<span class="caret"></span></a>
+	    				<a class="dropdown-toggle" data-toggle="dropdown" href="#" style="background-color: #002952">Login/Sign Up<span class="caret"></span></a>
 	    				<ul class="dropdown-menu">
-	    					<li><a href="{% url 'mainapp:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-          					<li><a href="{% url 'mainapp:signup' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-        				</ul>
-	    			</li>
-	    			<li class="dropdown">
-	    				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Quick Links<span class="caret"></span></a>
-	    				<ul class="dropdown-menu">
-	    					<li><a href="{% url 'mainapp:closedauction' %}"><span class="glyphicon glyphicon-folder-close"></span> Closed Auctions</a></li>
+	    					<li style="display: inline-block;"><a href="{% url 'mainapp:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          					<li style="display: inline-block;"><a href="{% url 'mainapp:signup' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
         				</ul>
 	    			</li>
 	    			{% endif %}
@@ -65,5 +79,23 @@
 		</nav>
 		{% block content %}
         {% endblock %}
+        <section class="copyright">
+			<!-- <div class="container"> -->
+				<div class="row">
+					<div class="col-md-12 ">
+						<div class="text-center text-white" style="position: fixed; left: 0; bottom: 0; width: 100%; background-color: #002952; color: white; text-align: center;">
+							&copy; 2019-2020 BookWire. All Rights Reserved.
+						</div>
+					</div>
+				</div>
+			<!-- </div> -->
+		</section>
+		<!-- End of Navigation bar -->
+
+		<!-- Start of Banner & Search -->
+
+		<!-- End of Banner & Search -->
+	<!-- <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script> for faster page load -->
+
 	</body>
 </html>

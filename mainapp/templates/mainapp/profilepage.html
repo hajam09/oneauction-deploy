@@ -2,32 +2,43 @@
 {% load static %}
 {% block content %}
 <div class="container">
-    <form class="form-horizontal" role="form" method="post">
-        <!--action="{% url 'mainapp:signup' %}"-->
+	<form class="form-horizontal" role="form" method="post"><!--action="{% url 'mainapp:signup' %}"-->
         {% csrf_token %}
-        <h2>Update Profile</h2>
-        <div class="form-group">
-            <label for="fullname" class="col-sm-3 control-label">Full Name</label>
-            <div class="col-sm-9">
-                <input type="text" id="fullname" name="fullname" placeholder="Full Name" class="form-control" maxlength="30" required/>
-            </div>
-        </div>
-        <div class="form-group">
+		<h2>Update Profile</h2>
+		<div class="form-group">
+			<label for="fullname" class="col-sm-3 control-label">Full Name</label>
+			<div class="col-sm-9">
+				<input type="text" id="fullname" name="fullname" placeholder="Full Name" class="form-control" maxlength="30" required/>
+			</div>
+		</div>
+		<div class="form-group">
             <label for="email" class="col-sm-3 control-label">Email</label>
             <div class="col-sm-9">
-                <input type="email" id="email" name="email" placeholder="Email" class="form-control" disabled/>
+                <input type="email" id="email" name="email" placeholder="Email" class="form-control" disabled required/>
             </div>
         </div>
         <div class="form-group">
             <label for="password" class="col-sm-3 control-label">Password</label>
             <div class="col-sm-9">
-                <input type="password" id="password" name="password" placeholder="Leave blank if you don't want to change the password!" minlength="8" class="form-control" required/>
+                <input type="password" id="password" name="password" placeholder="Leave blank if you don't want to change the password!" minlength="8" class="form-control"/>
+                <br><li id="letter" class="invalid" style="list-style-type: none;">&nbsp;&nbsp;At least <strong>one letter</strong></li>
+                <li id="capital" class="invalid" style="list-style-type: none;">&nbsp;&nbsp;At least <strong>one capital letter</strong></li>
+                <li id="number" class="invalid" style="list-style-type: none;">&nbsp;&nbsp;At least <strong>one number</strong></li>
+                <li id="length" class="invalid" style="list-style-type: none;">&nbsp;&nbsp;Be at least <strong>8 characters</strong></li>
             </div>
         </div>
         <div class="form-group">
-            <label for="password" class="col-sm-3 control-label">Repeat Password</label>
+            <label for="genres" class="col-sm-3 control-label">Genres (Choose atleast 3)</label>
             <div class="col-sm-9">
-                <input type="password" id="password2" name="password2" placeholder="Password" minlength="8" class="form-control" required/>
+                <input id="currentgenre" list="browsers" name="browser" placeholder="Add a genre" class="form-control"><br>
+                <button onclick="addgenres(this);return false;" class="btn btn-info" id="addgenre" type="submit">Add Genre</button>
+                <datalist id="browsers"></datalist>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="genres" class="col-sm-3 control-label">Your Chosen Genres</label>
+            <div class="col-sm-9">
+                <ul class="list-group" id="usergenre" name="genrevalue"></ul>
             </div>
         </div>
         <div class="form-group">
@@ -35,52 +46,197 @@
                 <button type="submit" class="btn btn-primary btn-block" onclick="postToUpdate();return false;">Update My Profile</button>
             </div>
         </div>
+
+
     </form>
 </div>
 <script type="text/javascript">
-    window.onload = getprofileitems;
+    window.onload = updatepage;
 
-    function getprofileitems() {
-        document.getElementById('fullname').value = "{{fullname}}";
-        document.getElementById('email').value = "{{email}}";
-    }
-
-    function postToUpdate() {
+    function postToUpdate(){
         var fullname = document.getElementById("fullname").value;
         var email = document.getElementById("email").value;
         var password = document.getElementById("password").value;
-        var password2 = document.getElementById("password2").value;
+        var usergenre = document.getElementById("usergenre");
+        console.log(usergenre);
+        var listofgenre = [];
+        for (var ii = 0; ii < usergenre.childNodes.length; ii++){listofgenre.push(usergenre.childNodes[ii].id);}
 
-        if (fullname != null && fullname != "" && email != null && email != "" && password == password2) {
-            //new password legnth not validated so user can entery less than 8 characters.
+        if(fullname == null || fullname == "" || fullname.length<3){
+            Swal.fire({ title: "Error!", text: "Please check your full name field!", icon: "error", button: "Continue", });
+        } else if(email == null | email == "" || email.includes(".")==false || email.includes("@")== false){
+            Swal.fire({ title: "Error!", text: "Please check your email field!", icon: "error", button: "Continue", });
+        } else if(listofgenre.length<3){
+            Swal.fire({ title: "Error!", text: "Ensure you have at-least 3 favourite genres selected!", icon: "error", button: "Continue", });
+        } else {
+            listofgenre = String(listofgenre);
+
             $.ajax({
                 type: "PUT",
                 data: {
                     fullname: fullname,
                     email: email,
                     password: password,
+                    listofgenre: listofgenre,
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                 },
-                success: function(info) {
-                    if (info == "Your details are updated!") {
-                        alert(info);
-                        var url = "{% url 'mainapp:login' %}";
-                        document.location.href = url;
+                success: function(info){
+                    if(info=="Your details are updated!"){
+                        Swal.fire({ title: "Good job!", text: info, icon: "success", button: "Continue", });
+                        // alert(info);
+                        var url = "{% url 'mainapp:index' %}";
+                        //document.location.href = url;
+                    }else{
+                        // This line of code will never be executed!!
+                        Swal.fire({ title: "Warning!", text: info, icon: "warning", button: "Continue", });
+                        // alert(info);
                     }
                 }
             })
-        } else {
-            console.log(fullname);
-            var conditions = "";
-            if (fullname=="") {
-                conditions = conditions + "Your Full Name field is empty!\n";
+        }
+
+        // if(fullname == null || fullname == "" || fullname.length<3 || email == null || email == "" || listofgenre.length<3){
+        //     var is_valid = false;
+        // }else{
+        //     var is_valid = true;
+        // }
+
+        // // if(fullname != null || fullname != "" || fullname.length<3, email != null && email != "", listofgenre.length>=3)
+        // if(is_valid)
+        // {//new password legnth not validated so user can entery less than 8 characters.
+        //     listofgenre = String(listofgenre);
+
+        //     $.ajax({
+        //         type: "PUT",
+        //         data: {
+        //             fullname: fullname,
+        //             email: email,
+        //             password: password,
+        //             listofgenre: listofgenre,
+        //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        //         },
+        //         success: function(info){
+        //             if(info=="Your details are updated!"){
+        //                 Swal.fire({ title: "Good job!", text: info, icon: "success", button: "Continue", });
+        //                 // alert(info);
+        //                 var url = "{% url 'mainapp:index' %}";
+        //                 //document.location.href = url;
+        //             }else{
+        //                 // This line of code will never be executed!!
+        //                 Swal.fire({ title: "Warning!", text: info, icon: "warning", button: "Continue", });
+        //                 // alert(info);
+        //             }
+        //         }
+        //     })
+        // }
+        // else{
+        //     Swal.fire({ title: "Warning!", text: "Please Fill All Required Fields!", icon: "warning", button: "Continue", });
+        //     // alert("Please Fill All Required Field");
+        //     return false;
+        // }
+    }
+
+    function updatepage(){
+
+        //Start: code for password security validator
+        //https://www.webdesignerdepot.com/2012/01/password-strength-verification-with-jquery/
+        $('input[type=password]').keyup(function() {
+            // keyup code here
+            var pswd = $(this).val();
+            //validate the length
+            if ( pswd.length < 8 ) {
+                $('#length').removeClass('valid').addClass('invalid');
+            } else {
+                $('#length').removeClass('invalid').addClass('valid');
             }
-            if (password!="" && password!=password2) {
-                conditions = conditions + "Your passwords are not the same!";
+
+            //validate letter
+            if ( pswd.match(/[A-z]/) ) {
+                $('#letter').removeClass('invalid').addClass('valid');
+            } else {
+                $('#letter').removeClass('valid').addClass('invalid');
             }
-            alert(conditions);
-            return false;
+
+            //validate capital letter
+            if ( pswd.match(/[A-Z]/) ) {
+                $('#capital').removeClass('invalid').addClass('valid');
+            } else {
+                $('#capital').removeClass('valid').addClass('invalid');
+            }
+
+            //validate number
+            if ( pswd.match(/\d/) ) {
+                $('#number').removeClass('invalid').addClass('valid');
+            } else {
+                $('#number').removeClass('valid').addClass('invalid');
+            }
+        }).focus(function() {
+            $('#pswd_info').show();
+        }).blur(function() {
+            $('#pswd_info').hide();
+        });
+        //End: code for password security validator
+
+        getprofileitems();
+        //May have error in the future because of this if thats the case then remove the code from here to ..
+        var genreslist = [];
+        "{% for categories in categories %}"
+            genreslist.push("{{categories}}")
+        "{% endfor %}"
+        //... here and uncommet the code below
+        //var genreslist = ['Action and adventure', 'Anthology', 'Autobiography', 'Biography', 'Book review', 'Classic', 'Comic book', 'Crime', 'Dictionary', 'Drama', 'Encyclopedia', 'Essay', 'Fable', 'Fairy Tale', 'Fan Fiction', 'Fantasy', 'Historical Fiction', 'Horror', 'Humor', 'Legend', 'Memoir', 'Mystery', 'Mythology', 'Realistic Fiction', 'Romance', 'Science Fiction', 'Self-Help Book', 'Speech', 'Suspense', 'Textbook', 'Thriller'];
+        updategenres(genreslist);
+    }
+
+    function addgenres(buttonELement){
+        var ugenre = document.getElementById("currentgenre").value;
+        if(ugenre && !document.getElementById(ugenre)){
+            $("#usergenre").append('<div style="height: 50px;" id="'+ugenre+'"<li name="genrename" class="list-group-item" id="'+ugenre+'">'+ugenre+'</li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="deletegenre(this);return false;" type="button" class="btn btn-danger pull-right">Delete</button></div>');
+            document.getElementById("currentgenre").value = "";
+            var genreElementID = ugenre+"option";
+            var deletegenreoption = document.getElementById(genreElementID);
+            deletegenreoption.remove();
         }
     }
+
+    function deletegenre(buttonELement){
+        var parent = buttonELement.parentNode.id;
+        var el = document.getElementById(parent);
+        el.remove();
+        //May have error in the future because of this if thats the case then remove the code from here to ..
+        var genreslist = [];
+        "{% for categories in categories %}"
+            genreslist.push("{{categories}}")
+        "{% endfor %}"
+        //... here and uncommet the code below
+        //var genreslist = ['Action and adventure', 'Anthology', 'Autobiography', 'Biography', 'Book review', 'Classic', 'Comic book', 'Crime', 'Dictionary', 'Drama', 'Encyclopedia', 'Essay', 'Fable', 'Fairy Tale', 'Fan Fiction', 'Fantasy', 'Historical Fiction', 'Horror', 'Humor', 'Legend', 'Memoir', 'Mystery', 'Mythology', 'Realistic Fiction', 'Romance', 'Science Fiction', 'Self-Help Book', 'Speech', 'Suspense', 'Textbook', 'Thriller'];
+        updategenres(genreslist)
+    }
+
+    function updategenres(genreslist){
+        console.log("updategenres");
+        $.ajax({
+            success: function(){
+                for(var j=0; j<genreslist.length; j++){
+                    var ell = genreslist[j]+"option"
+                    if(!document.getElementById(ell) && !document.getElementById(genreslist[j])){
+                        $("#browsers").append('<option id="'+genreslist[j]+'option" value="'+genreslist[j]+'">')
+                    }
+                }
+            }
+        })
+    }
+
+    function getprofileitems(){
+        document.getElementById('fullname').value = "{{fullname}}";
+        document.getElementById('email').value = "{{email}}";
+
+        var genrelist = "{{userfavouritegenre}}".replace(/[[\]]/g,'').replace(/&/g,'').replace(/#/g,'').replace(/;/g,'').replace(/[0-9]/g, '').replace(/, /g, ',').split(",");
+
+        for(var i=0; i<genrelist.length; i++){
+            $("#usergenre").append('<div style="height: 50px;" id="'+genrelist[i]+'"<li name="genrename" class="list-group-item" id="'+genrelist[i]+'">'+genrelist[i]+'</li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="deletegenre(this);return false;" type="button" class="btn btn-danger pull-right">Delete</button></div>');
+        }
+    }
+    console.log("AA");
 </script>
 {% endblock %}
